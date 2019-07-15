@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="css/iconfont.css">
     <link rel="stylesheet" href="css/main.css">
     <script src="js/jquery-1.12.4.min.js"></script>
-
+    <!-- 导入bootstrap的js 文件 -->
+    <script src="./js/bootstrap/js/bootstrap.min.js"></script>
 </head>
 
 <body>
@@ -22,49 +23,176 @@
         <div class="container-fluid common_con">
             <form class="form-horizontal article_form">
                 <div class="form-group">
-                    <label for="inputEmail3" class="col-sm-2 control-label">用户名称：</label>
+                    <label for="inputEmail3" class="col-sm-2 control-label username ">用户名称：</label>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" id="inputEmail3" value="李思思">
+                        <input type="text" class="form-control " name="username" id="inputEmail3" value="李思思">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="inputEmail3" class="col-sm-2 control-label">昵称：</label>
+                    <label for="inputEmail3" class="col-sm-2 control-label nickname ">昵称：</label>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" id="inputEmail3" value="思思">
+                        <input type="text" class="form-control" name="nickname" id="inputEmail3" value="思思">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="inputEmail3" class="col-sm-2 control-label">邮箱：</label>
+                    <label for="inputEmail3" class="col-sm-2 control-label email name">邮箱：</label>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" id="inputEmail3" value="lisisi@126.com">
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="inputPassword3" class="col-sm-2 control-label">用户图标：</label>
-                    <div class="col-sm-10">
-                        <img src="images/2.jpg" alt="" class="user_pic">
-                        <input type="file" id="exampleInputFile">
+                        <input type="text" class="form-control" name="email" id="inputEmail3" value="lisisi@126.com">
                     </div>
                 </div>
 
                 <div class="form-group">
-                        <label for="inputEmail3" class="col-sm-2 control-label">密码：</label>
-                        <div class="col-sm-4">
-                            <input type="password" class="form-control" id="inputEmail3" value="12345678">
-                        </div>
+                    <label for="inputPassword3" class="col-sm-2 control-label user_pic name">用户图标：</label>
+                    <div class="col-sm-10">
+                        <img src="images/2.jpg" alt="" class="user_pic">
+                        <input type="file" id="exampleInputFile" name="user_pic">
                     </div>
-               
-    
+                </div>
+
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-2 control-label password">密码：</label>
+                    <div class="col-sm-4">
+                        <input type="password" class="form-control" name="password" id="inputEmail3" value="12345678" name="">
+                    </div>
+                </div>
+
+
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-success">修改</button>
+                        <button type="submit" class="btn btn-success xiugai">修改</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">猛哥提示</h4>
+                </div>
+                <div class="modal-body">
+                    您修改成功!
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-queding">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        //入口函数
+        $(function () {
+            //需求图片预览
+            //1.给图片选择按钮一个change事件.
+            $('#exampleInputFile').on('change', function () {
+                //获得选中的图片
+                //1.给图片的选择按钮一个change事件
+                //console.log(this);
+                var userIcon = this.files[0];
+                //console.log(this.files);
+                //2.调用方法 获取url
+                var url = URL.createObjectURL(userIcon);
+                //console.log(url);
+                //4.把这个url设置给预览的img的src
+                $('.user_pic').attr('src', url);
+
+            });
+
+            //需求:
+            //一进页面user.html 获取个人信息 把这些信息 显示在页面对应的标签上
+            $.get({
+                url: 'http://localhost:8000/admin/getuser',
+                success: function (Databack) {
+                    if (Databack.data == 200) {
+                        //则表明获取成功  把对应的信息显示在对应的标签上
+
+                        // $('.username').val(Databack.username);
+                        // $('nickname').val(Databack.nickname);
+                        // $('.email').val(Databack.email);
+                        // $('password').val(Databack.password);
+                        //$('user_pic').attr('src',Databack.data.user_pic);
+                        //遍历Databack.data
+                        for (var key in Databack.data) {
+                            $('.' + key).val(Databack.data[key]);
+
+                        }
+                        $('.user_pic').attr('src', Databack.data.user_pic);
+
+                    }
+                }
+            });
+        });
+
+        //需求:修改设置用户信息
+        //1.给修改按钮设置点击事件 先要去掉默认跳转
+        $('.xiugai').on('click', function (e) {
+            e.preventDefault();
+            //2.创建一个formData对象 使用formData要保证form表单里面获取值标签有name属性 
+            var biaodan = new FormData($('.article_form')[0]); //传入的是form表单的dom对象
+            //3.发送ajax请求
+            $.ajax({
+                type: 'post',
+                url: 'http://localhost:8000/admin/userinfo_edit',
+                data: biaodan,
+                contentType: false,
+                processData: false,
+                success: function (res) {
+                    console.log(res);
+                    if (res.code == 200) {
+                        //修改成功了
+                        $('#myModal').modal();
+
+                        //给确定按钮设置一个点击事件
+                        $('.btn-queding').on('click', function (res) {
+
+                            // console.log(res);
+                            //location.reload();//刷新当前页面
+                            //parent.location.reload();//刷新iframe的父页面
+
+
+                            //再次发送ajax请求 获取用户信息 显示在父窗口对应的标签中
+                            //获取等绿管理员的信息
+                            $.ajax({
+                                type: 'get',
+                                url: 'http://localhost:8000/admin/getuser',
+                                success: function (backData) {
+                                    //判断
+                                    if (backData.code == 200) {
+                                        //把对应的名字还有头像显示在对应的标签中.
+                                        parent.$('.user_info')
+                                            .children(
+                                                'span').html(
+                                                    '欢迎&nbsp;&nbsp;' +
+                                                    backData.data
+                                                        .nickname);
+                                        parent.$('.user_info')
+                                            .children(
+                                                'img').attr('src',
+                                                    backData.data
+                                                        .user_pic);
+
+                                        parent.$('.user_center_link')
+                                            .children('img').attr(
+                                                'src', backData.data
+                                                    .user_pic);
+                                    }
+                                }
+                            })
+                            $('#myModal').modal('hide');
+                        });
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
