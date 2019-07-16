@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -97,7 +97,7 @@
                         <input type="hidden" name="id" class="id">
                         <div class="form-group">
                             <label for="recipient-name" class="control-label">分类名称:</label>
-                            <input type="text" name="name" class="form-control " id="recipient-name">
+                            <input type="text" name="name" class="form-control name" id="recipient-name">
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="control-label">分类别名:</label>
@@ -162,8 +162,8 @@
     </script> -->
     <script>
         // 入口函数
-        $(function () {
-            //把发请求获取文章类别信息,渲染到页面的代码封装成一个函数
+
+        $(function() {
             function getData() {
                 $.ajax({
                     url: 'http://localhost:8000/admin/category_search',
@@ -190,9 +190,8 @@
             $('#model_add').click(function () {
 
 
-                //通过判断这个按钮是否拥有btn-success这个类来判断是新增还是修改
-
-                if ($(this).hasClass('btn-success')) {
+            //通过判断这个按钮是否拥有btn-success这个类来判断是新增还是修改
+            if ($(this).hasClass('btn-success')) {
                     //编辑
                     //获取用户要修改的内容
                     // var name = $('.modal-body .name').val();
@@ -223,8 +222,7 @@
 
 
 
-                } else {
-                    // $('#model_add').click(function () {
+                } else { 
                     //2.获取用户输入的 分类名字和别名.
                     var cateName = $('#recipient-name').val().trim();
                     var cateSlug = $('#recipient-slug').val().trim();
@@ -254,17 +252,15 @@
                             }
                         }
                     });
+                };
 
 
 
-                }
 
 
 
                 //隐藏模态框
                 $('#addModal').modal('hide');
-
-
             });
 
 
@@ -297,7 +293,6 @@
                         }
                     });
                 }
-
             });
 
             //编辑分为两大步
@@ -311,16 +306,6 @@
                 $('#model_add').text('修改').addClass('btn-success');
                 $('#addModal').modal('show');
 
-                var id =$(this).attr('data-id');//获取id
-                var slug = $(this).parent().prev().text();//获取文章类别别名
-                var name = $(this).parent().prev().prev().text();//获取文章类别
-
-                //把他们显示在淡出的模态框 对应的标签中
-                //这里留一个问题 我们没有给id********
-                $('.modal-body .id').val(id);
-                $('.modal-body .name').val(name);
-                $('.modal-body .slug').val(slug);
-
             });
 
             //注意=新增和修改是同一个按钮所以要区分弹出来的新增和修改到底是哪一个
@@ -333,10 +318,9 @@
                 console.log(77777);
 
             });
-
-
-
-        });
+                    
+        })
+            //把发请求获取文章类别信息,渲染到页面的代码封装成一个函数
     </script>
 
 </body>
