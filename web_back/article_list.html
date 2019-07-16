@@ -275,6 +275,41 @@
         })
     </script>
 
+    <script src="./js/template-web.js"></script>
+
+    <script type="text/html" id="art_cate">
+        <option value=" ">所有分类</option>
+
+        {{each data v}}
+
+        <option value="{{v.id}}">{{v.name}}</option>
+
+
+        {{/each}}
+
+    </script>
+
+      <script>
+          $(function(){
+           //需求:一进到页面发送ajax请求获取文章所有的类别
+           $.get({
+               url:'http://localhost:8000/admin/category_search',
+               success:function(res){
+                 if(res.code == 200){
+                     //使用模板引擎渲染到页面1.1首先要引入模板引擎的js再创建一个模板
+                     var resHtml = template('art_cate',res);
+                     //把这个字符串交给文章类别html
+                     $('#selCategory').html(resHtml);
+
+                 }
+               },
+           });
+
+
+            
+          });
+      </script>
+
 </body>
 
 </html>
